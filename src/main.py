@@ -24,6 +24,19 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
 
+    @app.cli.command('drop')
+    def drop_db():
+        db.drop_all()
+        print('Tables dropped')
+     
+    @app.cli.command('create')
+    def create_db():
+        db.create_all()
+        print('Tables created')
+
+
+
+
 
     @app.route('/')
     def index():
