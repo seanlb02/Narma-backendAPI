@@ -2,14 +2,7 @@ import os
 
 from flask import Flask, jsonify, request
 from datetime import date, timedelta
-from Controllers.bots_controller import bots_bp
-from Controllers.users_controller import users_bp
-from Controllers.auth_controller import auth_bp
-from Controllers.connections_controller import connections_bp
 from db import db, ma, bcrypt, jwt
-from Models.Bot import Bot
-from Models.Users import User
-from Models.Connections import Connections
 
 
 def create_app():
@@ -32,7 +25,7 @@ def create_app():
     jwt.init_app(app)
 
 
-        @app.route('/')
+    @app.route('/')
     def index():
         return 'Hello World!'
 
