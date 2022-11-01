@@ -3,7 +3,6 @@ from sqlalchemy import Column, ForeignKey, Integer, Table
 from sqlalchemy.orm import declarative_base, relationship
 from marshmallow import fields 
 
-Base = declarative_base()
 
 class User(db.Model):
     __tablename__ = 'users'
