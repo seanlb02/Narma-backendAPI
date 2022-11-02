@@ -32,14 +32,14 @@ def user_connections():
 @jwt_required()
 def create_connection():
     bot_id = request.json["bot_id"]
-    stmt = db.select(Connections).filter(Connections.bot.has(name=bot_id)).filter_by(user_id = get_jwt_identity())
+    stmt = db.select(Connections).filter_by(user_id = get_jwt_identity(), bot_id=bot_id)
     exists = db.session.scalar(stmt)
     
     #users can only follow a bot once... 
     if not exists:
         connections = Connections(
         user_id = get_jwt_identity(),
-        bot.name = request.json.get("bot_id")
+        bot_id = request.json.get("bot_id")
         )
 
         db.session.add(connections)
