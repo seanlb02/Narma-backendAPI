@@ -12,5 +12,6 @@ likes_bp= Blueprint("Likes", __name__, url_prefix='/likes')
 
 
 
-# route for admins to return a count of how many likes a message has gotten:
+# route to return a count of message likes
+@likes_bp.route('/<string:message_id')
 

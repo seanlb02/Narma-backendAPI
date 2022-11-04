@@ -1,9 +1,9 @@
-from db import db, ma
-from sqlalchemy import Column, ForeignKey, Integer, Table
-from sqlalchemy.orm import relationship
-from marshmallow import fields
+# from db import db, ma
+# from sqlalchemy import Column, ForeignKey, Integer, Table
+# from sqlalchemy.orm import relationship
+# from marshmallow import fields
 
-class Likes(db.Model):
-    __tablename__ = 'Likes'
+# class Likes(db.Model):
+#     __tablename__ = 'Likes'
 
-    
+#     id = Column(Integer, primary_key = True)

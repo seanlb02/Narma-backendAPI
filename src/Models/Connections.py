@@ -13,7 +13,7 @@ class Connections(db.Model):
     user = db.relationship('User', back_populates = 'connections')
     bot_id = db.Column(db.Integer, db.ForeignKey("bots.id"), nullable = False)
     bot = db.relationship('Bot', back_populates = 'connections')
-    
+    messages = db.relationship('Messages', back_populates = 'connection', cascade = "all, delete")
 
 
 class ConnectionsSchema(ma.Schema):

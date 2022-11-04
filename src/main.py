@@ -3,19 +3,19 @@ from Controllers.bots_controller import bots_bp
 from Controllers.users_controller import users_bp
 from Controllers.auth_controller import auth_bp
 from Controllers.connections_controller import connections_bp
+from Controllers.messages_controller import messages_bp
 from Models.Bot import Bot
 from Models.Users import User
 from Models.Connections import Connections
+from Models.Messages import Messages
 from flask import Flask, jsonify, request
-from datetime import date, timedelta
-from db import db, ma, bcrypt, jwt
-from flask_autodoc.autodoc import Autodoc 
+from datetime import datetime, timedelta
+from db import db, ma, bcrypt, jwt 
 
 
 
 def create_app():
     app = Flask(__name__)
-    auto = Autodoc(app)
 
     #app-wide error handler
     @app.errorhandler(404)
@@ -29,7 +29,7 @@ def create_app():
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 
     db.init_app(app)
-    ma.init_app(app) 
+    ma.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
 
@@ -38,7 +38,7 @@ def create_app():
     app.register_blueprint(users_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(connections_bp)
-
+    app.register_blueprint(messages_bp)
 
     @app.cli.command('drop')
     def drop_db():
@@ -98,14 +98,21 @@ def create_app():
             )
         ]
 
-
-
         db.session.add_all(connections)
         db.session.commit()
+
+
+        messages =[
+            Messages(
+                connection = connections[0],
+                content = 'hey, check this out:',
+                timestamp = datetime.now()
+            )
+        ]
+        
+        db.session.add_all(messages)
+        db.session.commit()
         print('Table seeded')
-
-
-
 
     @app.route('/')
     def index():
