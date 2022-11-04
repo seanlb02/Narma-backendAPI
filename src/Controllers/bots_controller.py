@@ -1,7 +1,8 @@
 from flask import Blueprint, request
 from db import db, ma
 from Models.Bot import Bot, BotSchema   
-from flask_jwt_extended import create_access_token, jwt_required
+from Models.Connections import Connections, ConnectionsSchema
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 
 
@@ -28,25 +29,50 @@ def bot_by_id(id):
     
 
 #route to retrieve a single bot by name 
-@bots_bp.route('/<gender>/')
-def bot_by_name(gender):
-    stmt = db.select(Bot).filter_by(gender=gender)
+@bots_bp.route('/<string:name>/')
+def bot_by_name(name):
+    stmt = db.select(Bot).filter_by(name=name)
     bot = db.session.scalars(stmt)
     if bot:
         return BotSchema(many=True).dump(bot)
     else: 
         return {'error': 'No such bot exists with that gender'}
    
-
-#route to retrieve bots by gender
-@bots_bp.route('/<name>/')
-def bot_by_gender(name):
+# route for a logged in user to follow a bot after searching by name
+@bots_bp.route('/<string:name>/follow', methods = ['POST'])
+@jwt_required()
+def follow_bot(name):
     stmt = db.select(Bot).filter_by(name=name)
     bot = db.session.scalar(stmt)
-    if bot:
-        return BotSchema().dump(bot)
-    else: 
-        return {'error': 'No such bot exists with that name'}
+    jsonbot = BotSchema(many=True).dump(bot)
+    print(bot)
+    #fetch bot id (Connections FK) to create new Connections instance directly:
+    bot_id = jsonbot.id 
+    stmt = db.select(Connections).filter_by(user_id = get_jwt_identity(), bot_id=bot_id)
+    exists = db.session.scalar(stmt)
+    
+    #users can only follow a bot once... 
+    if not exists:
+        connections = Connections(
+        user_id = get_jwt_identity(),
+        bot_id = request.json.get("bot_id")
+        )
+
+        db.session.add(connections)
+        db.session.commit() 
+        return {"success" : f"you are now connected with {bot_name}"}
+    else:
+        return {"error" : "You are already connected"}
+
+#route to retrieve bots by gender
+# @bots_bp.route('/<name>/')
+# def bot_by_gender(name):
+#     stmt = db.select(Bot).filter_by(name=name)
+#     bot = db.session.scalar(stmt)
+#     if bot:
+#         return BotSchema().dump(bot)
+#     else: 
+#         return {'error': 'No such bot exists with that name'}
 
 #route to add new bot to database
 @bots_bp.route('/', methods=['POST'])

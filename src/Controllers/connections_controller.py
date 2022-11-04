@@ -51,6 +51,7 @@ def create_connection():
 
 #route to delete a connection from database, [i.e. user unfollows a bot]
 @connections_bp.route('/unfollow/', methods=['DELETE'])
+@auto.doc()
 @jwt_required()
 def unfollow_bot():
     bot_id = request.json["bot_id"]

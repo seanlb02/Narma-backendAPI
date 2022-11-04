@@ -9,10 +9,13 @@ from Models.Connections import Connections
 from flask import Flask, jsonify, request
 from datetime import date, timedelta
 from db import db, ma, bcrypt, jwt
+from flask_autodoc.autodoc import Autodoc 
+
 
 
 def create_app():
     app = Flask(__name__)
+    auto = Autodoc(app)
 
     #app-wide error handler
     @app.errorhandler(404)
@@ -47,6 +50,59 @@ def create_app():
         db.create_all()
         print('Tables created')
 
+    @app.cli.command('seed')
+    def seed_db():
+        bots = [
+            Bot(
+                name='John',
+                bio='Hey, im john. I love everything fitness!',
+                gender='Male',
+            ),
+            Bot(
+                name='Mary',
+                bio='Hey, im mary. I love everything fitness!',
+                gender='Female',
+            )
+        
+        ]
+
+        db.session.add_all(bots)
+        db.session.commit()
+
+        users = [
+            User(
+                name='Peter',
+                email='peter@hotmail.com',
+                password='password',
+                gender='Male',
+                age='25',
+
+            ),
+            User(
+                name='Debbie',
+                email='deb@hotmail.com',
+                password='password1',
+                gender='Non-binary',
+                age='20',
+            )
+        ]
+
+        db.session.add_all(users)
+        db.session.commit()
+        
+
+        connections = [
+            Connections(
+                user = users[0],
+                bot = bots[1]
+            )
+        ]
+
+
+
+        db.session.add_all(connections)
+        db.session.commit()
+        print('Table seeded')
 
 
 
