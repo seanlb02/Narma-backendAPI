@@ -44,7 +44,7 @@ def create_connection():
 
         db.session.add(connections)
         db.session.commit() 
-        return {"success" : f"you are now connected with {bot_id}"}
+        return {"success" : f"you are now connected with"}
     else:
         return {"error" : "You are already connected"}
 
@@ -53,12 +53,12 @@ def create_connection():
 @connections_bp.route('/unfollow/', methods=['DELETE'])
 @jwt_required()
 def unfollow_bot():
-    bot_id = request.json["bot_id"]
-    stmt = db.select(Connections).filter(Connections.bot.has(name=bot_id)).filter_by(user_id = get_jwt_identity())
+    bot_name = request.json["bot_name"]
+    stmt = db.select(Connections).filter(Connections.bot.has(name=bot_name)).filter_by(user_id = get_jwt_identity())
     connection = db.session.scalar(stmt)
     if connection:
         db.session.delete(connection)
         db.session.commit()
-        return {'message': f'you are no longer connected with {bot_id}'}, 200
+        return {'message': 'you are no longer connected'}, 200
     else:
-        return {'error': 'No such connection ever existed between these two'}, 404    
+        return {'error': 'No such connection ever existed between these two'}, 204    

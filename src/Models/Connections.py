@@ -19,6 +19,7 @@ class Connections(db.Model):
 class ConnectionsSchema(ma.Schema):
     user = fields.Nested('UserSchema', exclude=['password', 'connections'])
     bot = fields.Nested('BotSchema')
+    messages = fields.Nested('MessagesSchema')
 
     class Meta:
         model = Connections
