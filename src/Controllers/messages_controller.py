@@ -22,16 +22,16 @@ def send_message(id):
     
     # return(ConnectionsSchema(many=True).dump(conversations))
     if conversations:
-        # for i in conversations:
-        #     messages = Messages(
-        #         connection_id = i.id,
-        #         content = "test message2",
-        #         timestamp = datetime.now()
-        #         )
-        #         #add and commit new messages to db
-        #     db.session.add(messages)
-        #     db.session.commit()
-        # #respond to client request:
+        for i in conversations:
+            messages = Messages(
+                connection_id = i.id,
+                content = "test message2",
+                timestamp = datetime.now()
+                )
+                #add and commit new messages to db
+            db.session.add(messages)
+            db.session.commit()
+        #respond to client request:
         return {"success" : "Messages have been sent"}
     else:
         return {"error" : "bot has no followers"}, 204
@@ -48,3 +48,10 @@ def show_messages(id):
         return MessagesSchema(many=True).dump(message_list)
     else:
         return {"message": "no messages yet"}, 204
+
+
+# route for admins to DELETE messages from a defined bot
+@messages_bp.route('/<int:id>/')
+@jwt_required()
+def delete_message(id):
+    stmt = db.select(Messages). filter_by(id=id)

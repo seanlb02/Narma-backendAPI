@@ -12,11 +12,12 @@ class Bot(db.Model):
     name = db.Column(db.String)
     bio = db.Column(db.Text)
     gender = db.Column(db.String)
+    picture = db.Column(db.VARCHAR(1000))
     connections = db.relationship('Connections', back_populates='bot', cascade = "all, delete")
 
 class BotSchema(ma.Schema):
     class Meta:
         model = Bot
-        fields = ('id', 'name', 'bio', 'gender')
+        fields = ('id', 'name', 'bio', 'gender', 'picture')
         ordered = True
 

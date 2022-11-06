@@ -58,11 +58,13 @@ def create_app():
                 name='John',
                 bio='Hey, im john. I love everything fitness!',
                 gender='Male',
+                picture='empty'
             ),
             Bot(
                 name='Mary',
                 bio='Hey, im mary. I love everything fitness!',
                 gender='Female',
+                picture='empty'
             )
         
         ]
