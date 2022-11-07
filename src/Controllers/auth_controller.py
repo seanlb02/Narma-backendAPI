@@ -11,26 +11,28 @@ from flask_jwt_extended import create_access_token, jwt_required
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
+
 #route to create a user account
 @auth_bp.route('/register/', methods=['POST'])
 def auth_register():
-    try: 
-        #create a new model instance from user info
-        user = User(
-            name = request.json.get('name'),
-            email = request.json.get('email'),
-            password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf8'),
-            gender = request.json.get('gender'),
-            age = request.json.get('age')
-        )
-        db.session.add(user)
-        db.session.commit()
-        #respond to client request
-        return UserSchema().dump(user), 201
-    except ValueError:
-        return {'error': 'Please fill in all the required fields'}, 400
-    except IntegrityError:
-        return {"error" : "email already in use"}
+
+    data = UserSchema().load(request.json)
+    user = User(
+        name = data['name'],
+        email = data['email'],
+        password = bcrypt.generate_password_hash(data['password']).decode('utf8'),
+        gender = data['gender'],
+        age = data['age']
+    )
+    #Add and commit to the database
+    db.session.add(user)
+    db.session.commit()
+    #respond to client request
+    return UserSchema().dump(user), 201
+    # except ValueError:
+    #     return {'error': 'Please fill in all the required fields'}, 400
+    # except IntegrityError:
+    #     return {"error" : "email already in use"}
 
 @auth_bp.route('/login/', methods=['POST'])
 def auth_login():

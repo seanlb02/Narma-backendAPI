@@ -51,7 +51,14 @@ def show_messages(id):
 
 
 # route for admins to DELETE messages from a defined bot
-@messages_bp.route('/<int:id>/')
+@messages_bp.route('/<int:id>/', methods=['DELETE'])
 @jwt_required()
 def delete_message(id):
     stmt = db.select(Messages). filter_by(id=id)
+    result = db.session.scalar(stmt) 
+    if result:
+        db.session.delete(result)
+        db.session.commit()
+        return {'success': 'message has been deleted'}, 200
+    else:
+        return {'error': 'No message was found to delete'}, 204  

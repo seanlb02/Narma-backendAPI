@@ -1,9 +1,20 @@
-# from db import db, ma
-# from sqlalchemy import Column, ForeignKey, Integer, Table
-# from sqlalchemy.orm import relationship
-# from marshmallow import fields
+from db import db, ma
+from sqlalchemy import Column, ForeignKey, Integer, Table
+from sqlalchemy.orm import relationship
+from marshmallow import fields
 
-# class Likes(db.Model):
-#     __tablename__ = 'Likes'
+class Likes(db.Model):
+    __tablename__ = 'likes'
 
-#     id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable = False)
+    user = db.relationship('User', back_populates = 'likes')
+    messages_id = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable = False)
+    message = db.relationship('Messages', back_populates = 'likes')
+
+class LikesSchema(ma.Schema):
+    user = fields.Nested('UserSchema', exclude=['password', 'connections'])
+    message = fields.Nested('MessagesSchema')
+
+    model = Likes
+    fields = ('id', 'user', 'message')

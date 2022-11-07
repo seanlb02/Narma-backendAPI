@@ -1,6 +1,6 @@
 
 from os import name
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from db import db, ma
 from Models.Connections import Connections, ConnectionsSchema   
 from sqlalchemy import or_
@@ -44,9 +44,9 @@ def create_connection():
 
         db.session.add(connections)
         db.session.commit() 
-        return {"success" : f"you are now connected with"}
+        return {"success" : "User is now connected with"}
     else:
-        return {"error" : "You are already connected"}
+        return {"error" : "User already connected"}
 
 
 #route to delete a connection from database, [i.e. user unfollows a bot]
@@ -56,11 +56,12 @@ def unfollow_bot():
     bot_name = request.json["bot_name"]
     stmt = db.select(Connections).filter(Connections.bot.has(name=bot_name)).filter_by(user_id = get_jwt_identity())
     connection = db.session.scalar(stmt)
+
     if connection:
         db.session.delete(connection)
         db.session.commit()
-        return {'message': 'you are no longer connected'}, 200
+        return {'message': f'User is no longer connected with {bot_name}'}
     else:
-        return {'error': 'No such connection ever existed between these two'}, 204    
+        return {"error" : "No such connection ever existed between these two"}
 
         

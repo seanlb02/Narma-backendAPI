@@ -21,6 +21,8 @@ class ConnectionsSchema(ma.Schema):
     bot = fields.Nested('BotSchema')
     messages = fields.Nested('MessagesSchema')
 
+    #no validation as connections is a linking table
+
     class Meta:
         model = Connections
         fields = ('id', 'user', 'bot')

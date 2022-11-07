@@ -8,10 +8,11 @@ from Models.Bot import Bot
 from Models.Users import User
 from Models.Connections import Connections
 from Models.Messages import Messages
+from Models.Likes import Likes
 from flask import Flask, jsonify, request
 from datetime import datetime, timedelta
 from db import db, ma, bcrypt, jwt 
-
+from marshmallow.exceptions import ValidationError
 
 
 def create_app():
@@ -21,8 +22,23 @@ def create_app():
     @app.errorhandler(404)
     def not_found(err):
         return {'error': str(err)}, 404
+
+    @app.errorhandler(ValidationError)
+    def validation_error(err):
+        return {"error" : err.messages}, 400
+
+    @app.errorhandler(400)
+    def bad_request(err):
+        return {'error': str(err)}, 400
+
+    @app.errorhandler(401)
+    def unauthorised(err):
+        return{'error' : err.messages}, 401
     
-    
+    @app.errorhandler(KeyError)
+    def key_error(err):
+        return {'error' : f'The field {err} is required.'}, 400
+
 
 
     app.config['JSON_SORT_KEYS'] = False
@@ -58,13 +74,15 @@ def create_app():
                 name='John',
                 bio='Hey, im john. I love everything fitness!',
                 gender='Male',
-                picture='empty'
+                picture='empty',
+                age = '37'
             ),
             Bot(
                 name='Mary',
                 bio='Hey, im mary. I love everything fitness!',
                 gender='Female',
-                picture='empty'
+                picture='empty',
+                age = '29'
             )
         
         ]
@@ -115,6 +133,7 @@ def create_app():
         
         db.session.add_all(messages)
         db.session.commit()
+
         print('Table seeded')
 
     @app.route('/')

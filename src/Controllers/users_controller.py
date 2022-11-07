@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from functools import partial
 from db import db, ma
 from Models.Users import User, UserSchema 
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -28,8 +29,16 @@ def edit_user_profile():
     stmt = db.select(User).filter_by(id = get_jwt_identity())
     user = db.session.scalar(stmt)
 
-    if user:
-        user.gender = request.json.get('gender')
+    if user: 
+        data = UserSchema().load(request.json, partial=True)
+        #users can only edit their name, gender and age
+        
+        user.name = data['name']
+        user.email = user.email,
+        user.password = user.password,
+        user.gender = data['gender'],
+        user.age = data['age']
+        #add and commit to the database 
         db.session.add(user)
         db.session.commit()
         return UserSchema().dump(user)

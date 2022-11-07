@@ -1,3 +1,4 @@
+from functools import partial
 from flask import Blueprint, request
 from db import db, ma
 from Models.Bot import Bot, BotSchema   
@@ -36,33 +37,33 @@ def bot_by_name(name):
     if bot:
         return BotSchema(many=True).dump(bot)
     else: 
-        return {'error': 'No such bot exists with that gender'}
+        return {'error': 'No such bot exists with that name'}
    
-# route for a logged in user to follow a bot after searching by name
-@bots_bp.route('/<string:name>/follow', methods = ['POST'])
-@jwt_required()
-def follow_bot(name):
-    stmt = db.select(Bot).filter_by(name=name)
-    bot = db.session.scalar(stmt)
-    jsonbot = BotSchema(many=True).dump(bot)
-    print(bot)
-    #fetch bot id (Connections FK) to create new Connections instance directly:
-    bot_id = jsonbot.id 
-    stmt = db.select(Connections).filter_by(user_id = get_jwt_identity(), bot_id=bot_id)
-    exists = db.session.scalar(stmt)
+# # route for a logged in user to follow a bot after searching by name
+# @bots_bp.route('/<string:name>/follow/', methods = ['POST'])
+# @jwt_required()
+# def follow_bot(name):
+#     stmt = db.select(Bot).filter_by(name=name)
+#     bot = db.session.scalar(stmt)
+#     jsonbot = BotSchema(many=True).dump(bot)
+#     print(bot)
+#     #fetch bot id (Connections FK) to create new Connections instance directly:
+#     bot_id = jsonbot.id 
+#     stmt = db.select(Connections).filter_by(user_id = get_jwt_identity(), bot_id=bot_id)
+#     exists = db.session.scalar(stmt)
     
-    #users can only follow a bot once... 
-    if not exists:
-        connections = Connections(
-        user_id = get_jwt_identity(),
-        bot_id = request.json.get("bot_id")
-        )
+    # #users can only follow a bot once... 
+    # if not exists:
+    #     connections = Connections(
+    #     user_id = get_jwt_identity(),
+    #     bot_id = request.json.get("bot_id")
+    #     )
 
-        db.session.add(connections)
-        db.session.commit() 
-        return {"success" : f"you are now connected with {bot_name}"}
-    else:
-        return {"error" : "You are already connected"}
+    #     db.session.add(connections)
+    #     db.session.commit() 
+    #     return {"success" : "the user is now connected"}
+    # else:
+    #     return {"error" : "User is already connected with this bot"}
 
 #route to retrieve bots by gender
 # @bots_bp.route('/<name>/')
@@ -75,13 +76,16 @@ def follow_bot(name):
 #         return {'error': 'No such bot exists with that name'}
 
 #route to add new bot to database
-@bots_bp.route('/', methods=['POST'])
+@bots_bp.route('/add/', methods=['POST'])
 @jwt_required()
 def create_bot():
+
+    data = BotSchema().load(request.json)
     bot = Bot(
-        name = request.json["name"],
-        bio = request.json["bio"], 
-        gender = request.json["gender"],
+        name = data["name"],
+        bio = data["bio"], 
+        gender = data["gender"],
+        picture = data["picture"]
     )
 
     #Add and Commit to database
@@ -91,14 +95,18 @@ def create_bot():
     return BotSchema().dump(bot), 201
 
 #route to edit an existing bot in database
-@bots_bp.route('/<int:id>/', methods=['PATCH'])
-def update_one_bot(id):
-    stmt = db.select(Bot).filter_by(id=id)
+@bots_bp.route('/<string:name>/edit/', methods=['PATCH'])
+def update_one_bot(name):
+    stmt = db.select(Bot).filter_by(name=name)
     bot = db.session.scalar(stmt)
+
+    data = BotSchema().load(request.json, partial=partial)
+
     if bot:
-        bot.name = request.json.get("name") or bot.name
-        bot.bio = request.json.get("bio") or bot.bio
-        bot.gender = request.json.get("gender") or bot.gender
+        bot.name = data["name"] or bot.name
+        bot.bio = data["bio"] or bot.bio
+        bot.gender = data["gender"] or bot.gender
+        bot.age = data["age"] or bot.age
         db.session.add(bot)
         db.session.commit()
         return BotSchema().dump(bot)
