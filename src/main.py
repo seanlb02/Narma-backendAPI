@@ -4,6 +4,7 @@ from Controllers.users_controller import users_bp
 from Controllers.auth_controller import auth_bp
 from Controllers.connections_controller import connections_bp
 from Controllers.messages_controller import messages_bp
+from Controllers.likes_controller import likes_bp
 from Models.Bot import Bot
 from Models.Users import User
 from Models.Connections import Connections
@@ -56,6 +57,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(connections_bp)
     app.register_blueprint(messages_bp)
+    app.register_blueprint(likes_bp)
 
     @app.cli.command('drop')
     def drop_db():

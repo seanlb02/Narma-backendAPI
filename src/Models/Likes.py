@@ -9,7 +9,7 @@ class Likes(db.Model):
     id = Column(Integer, primary_key = True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable = False)
     user = db.relationship('User', back_populates = 'likes')
-    messages_id = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable = False)
+    message_id = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable = False)
     message = db.relationship('Messages', back_populates = 'likes')
 
 class LikesSchema(ma.Schema):
@@ -17,4 +17,4 @@ class LikesSchema(ma.Schema):
     message = fields.Nested('MessagesSchema')
 
     model = Likes
-    fields = ('id', 'user', 'message')
+    fields = ('id', 'user_id', 'message_id', 'user', 'message')

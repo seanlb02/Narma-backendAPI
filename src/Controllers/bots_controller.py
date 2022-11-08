@@ -116,7 +116,7 @@ def update_one_bot(name):
 
 #route to delete a bot from database
 @bots_bp.route('/<int:id>/', methods=['DELETE'])
-@jwt_required
+@jwt_required()
 def delete_one_bot(id):
     stmt = db.select(Bot).filter_by(id=id)
     bot = db.session.scalar(stmt)

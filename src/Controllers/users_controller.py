@@ -33,13 +33,12 @@ def edit_user_profile():
         data = UserSchema().load(request.json, partial=True)
         #users can only edit their name, gender and age
         
-        user.name = data['name']
-        user.email = user.email,
-        user.password = user.password,
+        user.name = data['name'],
+        # user.email = user.email,
+        # user.password = user.password,
         user.gender = data['gender'],
         user.age = data['age']
-        #add and commit to the database 
-        db.session.add(user)
+        #commit changes to the database 
         db.session.commit()
         return UserSchema().dump(user)
     else: 

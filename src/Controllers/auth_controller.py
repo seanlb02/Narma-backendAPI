@@ -34,6 +34,8 @@ def auth_register():
     # except IntegrityError:
     #     return {"error" : "email already in use"}
 
+
+#route for registered user to login/ be authenticated with a token
 @auth_bp.route('/login/', methods=['POST'])
 def auth_login():
     #Locate the user account
