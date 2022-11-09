@@ -5,7 +5,7 @@ from marshmallow import fields
 from marshmallow.validate import Length, Range, Email, OneOf, And, Regexp
 
 
-VALID_GENDERS = ('Male', 'Female', 'Non-Binary', 'Other')
+VALID_GENDERS = ('Male', 'Female', 'Non-binary', 'Other')
 
 class User(db.Model):
     __tablename__ = 'users'

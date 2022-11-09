@@ -107,6 +107,13 @@ def create_app():
                 password='password1',
                 gender='Non-binary',
                 age='20',
+            ),
+            User(
+                name='Jeremih',
+                email='jerryj@gmail.com',
+                password='password666',
+                gender='Other',
+                age='19',
             )
         ]
 
@@ -118,17 +125,35 @@ def create_app():
             Connections(
                 user = users[0],
                 bot = bots[1]
+            ), 
+            Connections(
+                user = users[2],
+                bot = bots[1]
+            ),
+            Connections(
+                user = users[0],
+                bot = bots[1]
+            ),
+            Connections(
+                user = users[2],
+                bot = bots[0]
             )
         ]
 
         db.session.add_all(connections)
         db.session.commit()
 
-
+        # NB: inside the app, messages sent by bots are distributed to ALL their followers
+        #this functionality does not exist when seeding the database with dummy data 
         messages =[
             Messages(
                 connection = connections[0],
                 content = 'hey, check this out:',
+                timestamp = datetime.now()
+            ),
+            Messages(
+                connection = connections[2],
+                content = 'how good is this',
                 timestamp = datetime.now()
             )
         ]

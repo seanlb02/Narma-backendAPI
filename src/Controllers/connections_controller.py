@@ -44,7 +44,7 @@ def create_connection():
 
         db.session.add(connections)
         db.session.commit() 
-        return {"success" : "User is now connected with"}
+        return {"success" : f"User is now connected with bot {bot_id}"}
     else:
         return {"error" : "User already connected"}
 

@@ -13,7 +13,7 @@ messages_bp = Blueprint('messages', __name__, url_prefix='/messages')
 
 #route for admins to upload messages to each bot's connections/followers
 @messages_bp.route('/<int:id>/send/', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def send_message(id):
     #select connections the bot is part of
     bot_id = id
@@ -25,7 +25,7 @@ def send_message(id):
         for i in conversations:
             messages = Messages(
                 connection_id = i.id,
-                content = "test message2",
+                content = request.json.get('content'),
                 timestamp = datetime.now()
                 )
                 #add and commit new messages to db
@@ -39,16 +39,18 @@ def send_message(id):
 
 
 #route for logged in users to access their messages from a defined bot
-@messages_bp.route('/<int:id>/')
+@messages_bp.route('/<string:name>/')
 @jwt_required()
-def show_messages(id):
-    stmt = db.select(Messages).filter(Messages.connection.has(user_id= get_jwt_identity())).filter(Connections.bot.has(id=id))
+def show_messages(name):
+    stmt = db.select(Messages).filter(Messages.connection.has(user_id= get_jwt_identity())).filter(Connections.bot.has(name=name))
     message_list = db.session.scalars(stmt)
     if message_list:
         return MessagesSchema(many=True).dump(message_list)
     else:
         return {"message": "no messages yet"}, 204
 
+#route for admins to edit messages from a deined bot
+@messages_bp.route('/<int:id>/edit', methods=['PATCH'])
 
 # route for admins to DELETE messages from a defined bot
 @messages_bp.route('/<int:id>/', methods=['DELETE'])
