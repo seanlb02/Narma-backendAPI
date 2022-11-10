@@ -29,6 +29,6 @@ class BotSchema(ma.Schema):
     
     class Meta:
         model = Bot
-        fields = ('id', 'name', 'bio', 'gender', 'picture')
+        fields = ('id', 'name', 'bio', 'gender', 'picture', 'age')
         ordered = True
 

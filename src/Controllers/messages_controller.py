@@ -4,6 +4,7 @@ from flask import Blueprint, request
 from db import db, ma
 from Models.Connections import Connections, ConnectionsSchema   
 from Models.Messages import Messages, MessagesSchema
+from Controllers.auth_controller import authorize
 from sqlalchemy import or_
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
@@ -15,8 +16,13 @@ messages_bp = Blueprint('messages', __name__, url_prefix='/messages')
 
 #route for admins to upload messages to each bot's connections/followers
 @messages_bp.route('/<int:id>/send/', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def send_message(id):
+
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
+
     #select connections the bot is part of
     bot_id = id
     stmt = db.select(Connections).filter_by(bot_id = bot_id)
@@ -43,6 +49,11 @@ def send_message(id):
 @messages_bp.route('/<string:name>/all/')
 @jwt_required()
 def show__all_messages(name):
+
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
+
     stmt = db.select(Messages).filter(Connections.bot.has(name=name))
     message_list = db.session.scalars(stmt)
     if message_list:
@@ -55,6 +66,7 @@ def show__all_messages(name):
 @messages_bp.route('/<string:name>/')
 @jwt_required()
 def show_messages(name):
+
     stmt = db.select(Messages).filter(Messages.connection.has(user_id= get_jwt_identity())).filter(Connections.bot.has(name=name))
     message_list = db.session.scalars(stmt)
     if message_list:
@@ -84,6 +96,11 @@ def show_messages(name):
 @messages_bp.route('/<int:id>/', methods=['DELETE'])
 @jwt_required()
 def delete_message(id):
+
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
+
     stmt = db.select(Messages). filter_by(id=id)
     result = db.session.scalar(stmt) 
     if result:

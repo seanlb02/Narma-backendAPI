@@ -2,6 +2,7 @@
 from os import name
 from flask import Blueprint, request, abort
 from db import db, ma
+from Controllers.auth_controller import authorize
 from Models.Connections import Connections, ConnectionsSchema   
 from sqlalchemy import or_
 
@@ -13,6 +14,11 @@ connections_bp= Blueprint('connections', __name__, url_prefix='/connections')
 #route to return all connections [admin only]
 @connections_bp.route('/all_connections/')
 def all_connections():
+
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
+
     stmt = db.select(Connections)
     connections = db.session.scalars(stmt)
     return ConnectionsSchema(many=True).dump(connections) 

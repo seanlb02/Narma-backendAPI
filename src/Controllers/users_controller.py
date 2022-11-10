@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from functools import partial
 from db import db, ma
 from Models.Users import User, UserSchema 
+from Controllers.auth_controller import authorize
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
@@ -10,6 +11,11 @@ users_bp = Blueprint('users', __name__, url_prefix='/users')
 # return all users in database [admins only]
 @users_bp.route('/')
 def all_users():
+
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
+
     stmt = db.select(User)
     users = db.session.scalars(stmt)
     return UserSchema(many=True).dump(users)
@@ -58,6 +64,11 @@ def delete_account():
 @users_bp.route('/<int:id>/delete/', methods=['DELETE'])
 @jwt_required(id)
 def admin_delete_account():
+
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
+
     stmt = db.select(User).filter_by(id = get_jwt_identity())
     user = db.session.scalar(stmt)
 

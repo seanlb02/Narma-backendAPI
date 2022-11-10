@@ -12,7 +12,7 @@ from Models.Messages import Messages
 from Models.Likes import Likes
 from flask import Flask, jsonify, request
 from datetime import datetime, timedelta
-from db import db, ma, bcrypt, jwt 
+from db import db, ma, bcrypt, jwt, generate_password_hash
 from marshmallow.exceptions import ValidationError
 
 
@@ -94,7 +94,7 @@ def create_app():
 
         users = [
             User(
-                name='Peter',
+                name='Peter Parker',
                 email='peter@hotmail.com',
                 password='password',
                 gender='Male',
@@ -102,18 +102,29 @@ def create_app():
 
             ),
             User(
-                name='Debbie',
+                name='Debbie harry',
                 email='deb@hotmail.com',
                 password='password1',
                 gender='Non-binary',
                 age='1994-06-03',
             ),
             User(
-                name='Jeremih',
+                #admin user
+                name='Jeremih something',
                 email='jerryj@gmail.com',
-                password='password666',
+                password=bcrypt.generate_password_hash('password666').decode('utf-8'),
                 gender='Other',
                 age='1990-2-5',
+                is_admin=True,
+            ), 
+            User(
+                #admin user
+                name='Sean Connery',
+                email='seanc@gmail.com',
+                password=bcrypt.generate_password_hash('password3').decode('utf-8'),
+                gender='Other',
+                age='1990-2-5',
+                is_admin=True,
             )
         ]
 

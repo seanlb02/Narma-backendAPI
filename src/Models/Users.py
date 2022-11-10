@@ -1,3 +1,4 @@
+from operator import is_
 from db import db, ma
 from sqlalchemy import Column, ForeignKey, Integer, Table
 from sqlalchemy.orm import declarative_base, relationship
@@ -11,11 +12,12 @@ class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(10), nullable = False)
+    name = db.Column(db.String(30), nullable = False)
     email = db.Column(db.String, nullable = False) 
     password = db.Column(db.String, nullable = False)
     gender = db.Column(db.String, nullable = False)
     age = db.Column(db.Date, nullable = False)
+    is_admin = db.Column(db.Boolean, nullable = True, default = False)
     connections = db.relationship('Connections', back_populates='user', cascade = "all, delete")
     likes = db.relationship('Likes', back_populates='user', cascade = "all, delete")
 
@@ -29,6 +31,7 @@ class UserSchema(ma.Schema):
     password = fields.String(required=True, validate=And(Length(min=8), Regexp('^[a-zA-Z0-9]')))
     gender = fields.String(required=True, validate= OneOf(VALID_GENDERS))
     age = fields.Date(required=True)
+    is_admin = fields.Boolean(default=False)
 
     #conditional validator for user age:
     @validates('age')

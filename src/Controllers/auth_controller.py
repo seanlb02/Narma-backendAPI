@@ -1,12 +1,15 @@
 from flask import Blueprint, request
-from db import db, ma, bcrypt
+from db import db, ma, bcrypt 
 from Models.Bot import Bot, BotSchema   
 from datetime import timedelta
 from Models.Users import User, UserSchema 
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
-
+def authorize():
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
+    user = db.session.scalar(stmt)
+    return user.is_admin
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -29,10 +32,6 @@ def auth_register():
     db.session.commit()
     #respond to client request
     return UserSchema().dump(user), 201
-    # except ValueError:
-    #     return {'error': 'Please fill in all the required fields'}, 400
-    # except IntegrityError:
-    #     return {"error" : "email already in use"}
 
 
 #route for registered user to login/ be authenticated with a token

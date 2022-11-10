@@ -1,6 +1,7 @@
 from functools import partial
 from flask import Blueprint, request
 from db import db, ma
+from Controllers.auth_controller import authorize 
 from Models.Bot import Bot, BotSchema   
 from Models.Connections import Connections, ConnectionsSchema
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -45,13 +46,17 @@ def bot_by_name(name):
 @bots_bp.route('/add/', methods=['POST'])
 @jwt_required()
 def create_bot():
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
 
     data = BotSchema().load(request.json)
     bot = Bot(
         name = data["name"],
         bio = data["bio"], 
         gender = data["gender"],
-        picture = data["picture"]
+        picture = data["picture"],
+        age = data["age"]
     )
 
     #Add and Commit to database
@@ -63,6 +68,11 @@ def create_bot():
 #route to edit an existing bot in database [admin only]
 @bots_bp.route('/<string:name>/edit/', methods=['PATCH'])
 def update_one_bot(name):
+
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
+
     stmt = db.select(Bot).filter_by(name=name)
     bot = db.session.scalar(stmt)
 
@@ -84,6 +94,11 @@ def update_one_bot(name):
 @bots_bp.route('/<int:id>/delete/', methods=['DELETE'])
 @jwt_required()
 def delete_one_bot(id):
+
+    #check to see if user is an admin:
+    if not authorize():
+        return {'error': 'You must be an admin'}, 401
+
     stmt = db.select(Bot).filter_by(id=id)
     bot = db.session.scalar(stmt)
     if bot:
