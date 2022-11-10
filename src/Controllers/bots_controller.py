@@ -39,43 +39,9 @@ def bot_by_name(name):
     else: 
         return {'error': 'No such bot exists with that name'}
    
-# # route for a logged in user to follow a bot after searching by name
-# @bots_bp.route('/<string:name>/follow/', methods = ['POST'])
-# @jwt_required()
-# def follow_bot(name):
-#     stmt = db.select(Bot).filter_by(name=name)
-#     bot = db.session.scalar(stmt)
-#     jsonbot = BotSchema(many=True).dump(bot)
-#     print(bot)
-#     #fetch bot id (Connections FK) to create new Connections instance directly:
-#     bot_id = jsonbot.id 
-#     stmt = db.select(Connections).filter_by(user_id = get_jwt_identity(), bot_id=bot_id)
-#     exists = db.session.scalar(stmt)
-    
-    # #users can only follow a bot once... 
-    # if not exists:
-    #     connections = Connections(
-    #     user_id = get_jwt_identity(),
-    #     bot_id = request.json.get("bot_id")
-    #     )
 
-    #     db.session.add(connections)
-    #     db.session.commit() 
-    #     return {"success" : "the user is now connected"}
-    # else:
-    #     return {"error" : "User is already connected with this bot"}
 
-#route to retrieve bots by gender
-# @bots_bp.route('/<name>/')
-# def bot_by_gender(name):
-#     stmt = db.select(Bot).filter_by(name=name)
-#     bot = db.session.scalar(stmt)
-#     if bot:
-#         return BotSchema().dump(bot)
-#     else: 
-#         return {'error': 'No such bot exists with that name'}
-
-#route to add new bot to database
+#route for admins to add new bot to database
 @bots_bp.route('/add/', methods=['POST'])
 @jwt_required()
 def create_bot():
@@ -94,7 +60,7 @@ def create_bot():
     #Respond to client request
     return BotSchema().dump(bot), 201
 
-#route to edit an existing bot in database
+#route to edit an existing bot in database [admin only]
 @bots_bp.route('/<string:name>/edit/', methods=['PATCH'])
 def update_one_bot(name):
     stmt = db.select(Bot).filter_by(name=name)
@@ -114,8 +80,8 @@ def update_one_bot(name):
         return {'error': 'No such bot exists with that id'}, 404
 
 
-#route to delete a bot from database
-@bots_bp.route('/<int:id>/', methods=['DELETE'])
+#route to delete a bot from database [admin only]
+@bots_bp.route('/<int:id>/delete/', methods=['DELETE'])
 @jwt_required()
 def delete_one_bot(id):
     stmt = db.select(Bot).filter_by(id=id)

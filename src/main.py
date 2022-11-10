@@ -76,14 +76,14 @@ def create_app():
                 name='John',
                 bio='Hey, im john. I love everything fitness!',
                 gender='Male',
-                picture='empty',
+                picture='stock image',
                 age = '37'
             ),
             Bot(
                 name='Mary',
                 bio='Hey, im mary. I love everything fitness!',
                 gender='Female',
-                picture='empty',
+                picture='stock image',
                 age = '29'
             )
         
@@ -98,7 +98,7 @@ def create_app():
                 email='peter@hotmail.com',
                 password='password',
                 gender='Male',
-                age='25',
+                age='2000-10-6',
 
             ),
             User(
@@ -106,14 +106,14 @@ def create_app():
                 email='deb@hotmail.com',
                 password='password1',
                 gender='Non-binary',
-                age='20',
+                age='1994-06-03',
             ),
             User(
                 name='Jeremih',
                 email='jerryj@gmail.com',
                 password='password666',
                 gender='Other',
-                age='19',
+                age='1990-2-5',
             )
         ]
 

@@ -16,7 +16,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 @auth_bp.route('/register/', methods=['POST'])
 def auth_register():
 
-    data = UserSchema().load(request.json)
+    data = UserSchema().load(request.json, partial=True)
     user = User(
         name = data['name'],
         email = data['email'],

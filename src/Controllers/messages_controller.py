@@ -11,6 +11,8 @@ from datetime import datetime
 
 messages_bp = Blueprint('messages', __name__, url_prefix='/messages')
 
+
+
 #route for admins to upload messages to each bot's connections/followers
 @messages_bp.route('/<int:id>/send/', methods=['POST'])
 # @jwt_required()
@@ -37,6 +39,17 @@ def send_message(id):
         return {"error" : "bot has no followers"}, 204
 
 
+#route for admins to get access to all messages from a specific bot
+@messages_bp.route('/<string:name>/all/')
+@jwt_required()
+def show__all_messages(name):
+    stmt = db.select(Messages).filter(Connections.bot.has(name=name))
+    message_list = db.session.scalars(stmt)
+    if message_list:
+        return MessagesSchema(many=True).dump(message_list)
+    else:
+        return {"message": "no messages yet"}, 204
+
 
 #route for logged in users to access their messages from a defined bot
 @messages_bp.route('/<string:name>/')
@@ -49,8 +62,23 @@ def show_messages(name):
     else:
         return {"message": "no messages yet"}, 204
 
-#route for admins to edit messages from a deined bot
-@messages_bp.route('/<int:id>/edit', methods=['PATCH'])
+# #route for admins to edit messages from a deined bot
+# @messages_bp.route('/<int:id>/edit/', methods=['PATCH'])
+# @jwt_required()
+# def edit_message(id):
+#     stmt = db.select(Messages).filter_by(id=id)
+#     message = db.session.scalar(stmt)
+
+#     data = MessagesSchema().load(request.json)
+
+#     if message:
+#         message.content = data['content']
+
+#         db.session.commit()
+
+#         return MessagesSchema().dump(message)
+#     else:
+#         return {'error' : 'message does not exist'}
 
 # route for admins to DELETE messages from a defined bot
 @messages_bp.route('/<int:id>/', methods=['DELETE'])

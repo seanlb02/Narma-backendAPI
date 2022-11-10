@@ -10,7 +10,7 @@ class Likes(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable = False)
     user = db.relationship('User', back_populates = 'likes')
     message_id = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable = False)
-    message = db.relationship('Messages', back_populates = 'likes')
+    message = db.relationship('Messages', back_populates = 'likes', cascade = 'all, delete')
 
 class LikesSchema(ma.Schema):
     user = fields.Nested('UserSchema', exclude=['password', 'connections'])

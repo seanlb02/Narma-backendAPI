@@ -20,10 +20,10 @@ def all_users():
 def user_profile():
     stmt = db.select(User).filter_by(id = get_jwt_identity())
     user_info = db.session.scalars(stmt)
-    return UserSchema(many=True).dump(user_info)
+    return UserSchema(many=True, exclude=['password']).dump(user_info)
 
 # edit user profile [logged in user only]
-@users_bp.route('/edit_profile/', methods=['PATCH'])
+@users_bp.route('/current/edit_profile/', methods=['PATCH'])
 @jwt_required()
 def edit_user_profile():
     stmt = db.select(User).filter_by(id = get_jwt_identity())
@@ -32,15 +32,40 @@ def edit_user_profile():
     if user: 
         data = UserSchema().load(request.json, partial=True)
         #users can only edit their name, gender and age
-        
+    
         user.name = data['name'],
-        # user.email = user.email,
-        # user.password = user.password,
         user.gender = data['gender'],
         user.age = data['age']
         #commit changes to the database 
         db.session.commit()
-        return UserSchema().dump(user)
-    else: 
-        return {"error": "User session expired, please log in again"}, 404
+        return UserSchema(exclude=['password']).dump(user)
+
+
+#route for user to delete their account 
+@users_bp.route('/current/delete_account/', methods=['DELETE'])
+@jwt_required()
+def delete_account():
+    stmt = db.select(User).filter_by(id = get_jwt_identity())
+    user = db.session.scalar(stmt)
+
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return {"message" : "User has been successfully deleted"}
+
+
+#route for user to delete a users account [i.e. ban them]
+@users_bp.route('/<int:id>/delete/', methods=['DELETE'])
+@jwt_required(id)
+def admin_delete_account():
+    stmt = db.select(User).filter_by(id = get_jwt_identity())
+    user = db.session.scalar(stmt)
+
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return {"message" : "User has been successfully deleted"}
+
+
+
 

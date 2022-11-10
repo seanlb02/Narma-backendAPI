@@ -11,7 +11,7 @@ class Bot(db.Model):
     __tablename__ = 'bots'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
     bio = db.Column(db.Text, nullable=False)
     gender = db.Column(db.String, nullable = False)
     picture = db.Column(db.VARCHAR(1000), nullable = False)
