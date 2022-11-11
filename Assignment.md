@@ -1,5 +1,5 @@
 
-Narma - Stay connected off-grid with the Narma Network
+# Narma - Stay connected off-grid with the Narma Network
 
 ---
 ## Purpose and Scope (R1&2)
@@ -19,7 +19,7 @@ Narma aims to:
 
 ## Why Postgres as a Database 
 
-Relational functionality 
+<u>Relational functionality</u>
 
 Messaging applications rely heavily on the interaction between users. Often, in-app messages exhanged between a sender and receiver are stored as individual entries within a table that references the <em>user</em> entity. Given this, Narma required a relational database that can implement this table linking logic. Postgres was chosen as the database management systems for narma for its seamless compatibility with Flask and the python language. It is also in flexible in its ability to work with user-defined data types (including JSON) and custom functions.(PostgreSQL, N.d.). 
 
@@ -37,7 +37,7 @@ user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 ```
 
-Given the potential high frequency of messaging within the app, and the extensive volume of data which is required to be stored for each message sent was an additional reason to implement Postgres as the apps database. Postgres is robust for a range of large file data types, and is measurably more effiecent in storing blobs and images comapred with MySQL ().
+Given the potential high frequency of messaging within the app, and the extensive volume of data which is required to be stored for each message sent was an additional reason to implement Postgres as the apps database. Postgres is robust for a range of large file data types, and is measurably more effiecent in storing blobs and images comapred with MySQL (Kavin, 2022).
 
 When compared to other SQL-reliant database systems (such as MySQL), postgres generally suffers from lower speeds and is particularly inefficient in establishing client connections which cost 10mb memory each (Hirstozov, 2019). To deal with this, connection pooling is often implemented between to handle high volumes of client connections. PgBouncer is a widely used postgresql connection pooler module. 
 
@@ -172,7 +172,7 @@ The entity relationship diagram below details the proposed tables to be created 
 
 Users and bots were inherently different entities and thus warranted having their own tables. These are the root tables, which help connect other entities and functions in the app. They are linked by a linking table called Connections which is an entity which represents a user 'following' a bot. Representing this as an entity was important, rather thna just bypassing it to link connections via messages that are sent (e.g. sender vs reciever) as it allowed easy cascade deletion - that is, once a connection is deleted (user ufollows a bot), the messages associated with that conversation is deleted with it. This I felt will increase efficiency in the apps backend greatly particularly later in the apps life.
 
-Messages are the key entitiy in the app and give it purpose. Content within the message is taken from a 'content' entity/gtable and it is timestamped at time a message is sent. 
+Messages are the key entitiy in the app and give it purpose. Content within the message is taken from a 'content' entity/table and it is timestamped at time a message is sent. 
 
 In a standard messaging app, the messages entity would usually include the message's content. This allows users to edit their OWN messages. However, since Narma is a one-way messaging app, where bot messages are written once and sent to potentially +million users, it was necessary to isolate the message 'content/body' into its own model/table. Having an isolated content table takes into consideration potential company workflows:  for example, company staff admins will be able to upload content at will before it is sent to users in order to be checked/evaluated by supervisors. 
 
@@ -404,3 +404,7 @@ Trello link: https://trello.com/invite/b/vy1F5ABe/ATTI8da6eacdffe70c02c7465565d6
 
 Hirstozov, K. 2019. MySQL vs PostgreSQL - Choose the right database for your project. https://developer.okta.com/blog/2019/07/19/mysql-vs-postgres. Accessed 10/11/22
 
+Saravanan, Kavin, "The Comparison of Database Management Systems on the Speed of Analysis by Artificial Intelligence" (2022). South Carolina Junior Academy of Science. 2.
+https://scholarexchange.furman.edu/scjas/2022/all/2 
+
+PostgreSQL Documentation. N.d. About. https://www.postgresql.org/about/. Accessed 6/11/22.
