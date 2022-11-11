@@ -16,10 +16,17 @@ Content within these messages is general in nature, but is intended to support p
 Program files can be downloaded with the following curl command:
 
 ```bash
+$ curl -L -O https://github.com/seanlb02/T2A2-backendAPI/archive/refs/heads/main.zip
 
 ```
 
-Open the program directory in a IDE of your chosing then proceed to create and initialise a realtaional database with (postgres prefered) on port 5432 of your local machine. 
+Unzip and open the program directory in a IDE of your chosing, enter a virtual environment and install the program requirements with:
+
+```bash
+$ pip install -r requirements.txt
+```
+
+Proceed to create and initialise a realtaional database with (postgres prefered) on port 5432 of your local machine. 
 
 Since the project is still in developement, the API ORM adaptor comes with the database name and password that was initially used when the API was built. For quick start, set up a database called narma_app with the password of medic2. 
 
