@@ -19,6 +19,7 @@ Program files can be downloaded with the following curl command:
 $ curl -L -O https://github.com/seanlb02/T2A2-backendAPI/archive/refs/heads/main.zip
 
 ```
+Alternatively, you can download the zip directly from the github repository home page: https://github.com/seanlb02/T2A2-backendAPI
 
 Unzip and open the program directory in a IDE of your chosing, enter a virtual environment and install the program requirements with:
 
