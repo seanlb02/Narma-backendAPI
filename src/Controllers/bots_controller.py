@@ -83,7 +83,7 @@ def update_one_bot(name):
         bot.bio = data["bio"] or bot.bio
         bot.gender = data["gender"] or bot.gender
         bot.age = data["age"] or bot.age
-        db.session.add(bot)
+      
         db.session.commit()
         return BotSchema().dump(bot)
     else:

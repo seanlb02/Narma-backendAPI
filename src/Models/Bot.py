@@ -17,6 +17,8 @@ class Bot(db.Model):
     picture = db.Column(db.VARCHAR(1000), nullable = False)
     age = db.Column(db.Integer, nullable = False)
     connections = db.relationship('Connections', back_populates='bot', cascade = "all, delete")
+    content = db.relationship('Content', back_populates = 'bot', cascade = "all, delete")
+
 
 class BotSchema(ma.Schema):
 

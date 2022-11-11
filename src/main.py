@@ -5,11 +5,13 @@ from Controllers.auth_controller import auth_bp
 from Controllers.connections_controller import connections_bp
 from Controllers.messages_controller import messages_bp
 from Controllers.likes_controller import likes_bp
+from Controllers.content_controller import content_bp
 from Models.Bot import Bot
 from Models.Users import User
 from Models.Connections import Connections
 from Models.Messages import Messages
 from Models.Likes import Likes
+from Models.Content import Content
 from flask import Flask, jsonify, request
 from datetime import datetime, timedelta
 from db import db, ma, bcrypt, jwt, generate_password_hash
@@ -58,6 +60,7 @@ def create_app():
     app.register_blueprint(connections_bp)
     app.register_blueprint(messages_bp)
     app.register_blueprint(likes_bp)
+    app.register_blueprint(content_bp)
 
     @app.cli.command('drop')
     def drop_db():
@@ -153,18 +156,47 @@ def create_app():
 
         db.session.add_all(connections)
         db.session.commit()
+        
+        content = [
+            Content(
+                bot = bots[0],
+                content = "hey this is content: www.google.com"
+            ),
+            Content(
+                bot = bots[0],
+                content = "content 2 isnfiusd"
+            ),
+            Content(
+                bot = bots[1],
+                content = "hey this is content: www.google.com"
+            ),
+            Content(
+                bot = bots[1],
+                content = "content 2 isnfiusd"
+            ),
+            
+            
+        ]
+
+        db.session.add_all(content)
+        db.session.commit()
 
         # NB: inside the app, messages sent by bots are distributed to ALL their followers
         #this functionality does not exist when seeding the database with dummy data 
         messages =[
             Messages(
-                connection = connections[0],
-                content = 'hey, check this out:',
+                connection = connections[3],
+                content = content[0],
                 timestamp = datetime.now()
             ),
             Messages(
-                connection = connections[2],
-                content = 'how good is this',
+                connection = connections[3],
+                content = content[1],
+                timestamp = datetime.now()
+            ),
+            Messages(
+                connection = connections[0],
+                content = content[3],
                 timestamp = datetime.now()
             )
         ]

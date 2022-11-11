@@ -12,16 +12,17 @@ class Messages (db.Model):
     id = db.Column(db.Integer, primary_key = True)
     connection_id = db.Column(db.Integer, db.ForeignKey("connections.id"), nullable = False)
     connection = db.relationship('Connections', back_populates = 'messages')
-    content = db.Column(db.VARCHAR(length=2000), nullable = False)
+    content_id = db.Column(db.Integer, db.ForeignKey("content.id"), nullable = False)
+    content = db.relationship('Content', back_populates = 'messages')
     timestamp = db.Column(db.DateTime)
-    likes = db.relationship('Likes', back_populates = 'message')
+    likes = db.relationship('Likes', back_populates = 'message', cascade = "all, delete") 
 
 class MessagesSchema(ma.Schema):
     connection = fields.Nested('ConnectionsSchema')
-
-    content = fields.String(required=True, validate=Length(min=2))
+    content = fields.Nested('ContentSchema')
 
     class Meta:
         model = Messages
-        fields = ('id', 'content', 'timestamp', 'connection.id')
+        fields = ('id', 'timestamp', 'connection.id', 'content')
+        ordered = True
         
