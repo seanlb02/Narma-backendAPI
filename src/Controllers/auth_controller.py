@@ -24,6 +24,7 @@ def auth_register():
         name = data['name'],
         email = data['email'],
         password = bcrypt.generate_password_hash(data['password']).decode('utf8'),
+        phonenumber=data['phonenumber'],
         gender = data['gender'],
         age = data['age']
     )

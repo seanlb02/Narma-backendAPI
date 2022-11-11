@@ -207,6 +207,7 @@ pathspec==0.10.1
 patsy==0.5.3
 pep8==1.7.1
 pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
+phonenumbers==8.13.0
 pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
 Pillow==9.2.0
 pip-review==1.2.0
