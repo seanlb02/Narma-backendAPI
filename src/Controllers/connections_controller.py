@@ -1,5 +1,6 @@
 
 from os import name
+from sqlite3 import IntegrityError
 from flask import Blueprint, request, abort
 from db import db, ma
 from Controllers.auth_controller import authorize
@@ -40,19 +41,23 @@ def create_connection():
     bot_id = request.json["bot_id"]
     stmt = db.select(Connections).filter_by(user_id = get_jwt_identity(), bot_id=bot_id)
     exists = db.session.scalar(stmt)
-    
+
     #users can only follow a bot once... 
     if not exists:
         connections = Connections(
         user_id = get_jwt_identity(),
         bot_id = request.json.get("bot_id")
         )
-
+        #if requsted bot dos not exist in the database:
+        if IntegrityError:
+            return {"error" : "bot does not exist in the database"}
         db.session.add(connections)
         db.session.commit() 
         return {"success" : f"User is now connected with bot {bot_id}"}
     else:
         return {"error" : "User already connected"}
+
+
 
 
 #route to delete a connection from database, [i.e. user unfollows a bot]
