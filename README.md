@@ -149,19 +149,6 @@ $ flask run
 }
 ```
 
-/messages/\<int:id>/delete/
-
-- Method: DELETE
-- Args: bot_id
-- Authentication: bearer(token)
-- Authorisation: admin (bool)
-- Description: allows admins to delete a specific message
-- Request Body: none
-- Response body:
-
-```json
-{"success" : "message has been deleted"}
-```
 
 <u>CONNECTIONS</u>
 
@@ -213,6 +200,7 @@ $ flask run
     "bio"
     "gender"
     "picture"
+    "age" (integer)
 }
 ```
 
@@ -320,10 +308,10 @@ $ flask run
 }
 ```
 
-/content/<string:name>/add/
+/content/<int:id>/add/
 
 - Method: POST 
-- Args: bot_name
+- Args: bot_id
 - Authentication: bearer(Token)
 - Authorisation: admin (bool)
 - Description: returns a specific piece of content specified by id
@@ -455,7 +443,7 @@ $ flask run
     "id"
     "name"
     "email"
-    "phonenumber"
+    "phonenumber" (incl. +country code)
     "gender"
     "age"
     "connections": (list)
