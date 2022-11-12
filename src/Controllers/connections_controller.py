@@ -14,6 +14,7 @@ connections_bp= Blueprint('connections', __name__, url_prefix='/connections')
 
 #route to return all connections [admin only]
 @connections_bp.route('/all_connections/')
+@jwt_required()
 def all_connections():
 
     #check to see if user is an admin:

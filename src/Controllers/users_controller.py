@@ -1,3 +1,4 @@
+from xml.dom.minidom import Identified
 from flask import Blueprint, request
 from functools import partial
 from db import db, ma
@@ -10,6 +11,7 @@ users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 # return all users in database [admins only]
 @users_bp.route('/')
+@jwt_required()
 def all_users():
 
     #check to see if user is an admin:
@@ -62,14 +64,14 @@ def delete_account():
 
 #route for user to delete a users account [i.e. ban them]
 @users_bp.route('/<int:id>/delete/', methods=['DELETE'])
-@jwt_required(id)
-def admin_delete_account():
+@jwt_required()
+def admin_delete_account(id):
 
     #check to see if user is an admin:
     if not authorize():
         return {'error': 'You must be an admin'}, 401
 
-    stmt = db.select(User).filter_by(id = get_jwt_identity())
+    stmt = db.select(User).filter_by(id = id)
     user = db.session.scalar(stmt)
 
     if user:

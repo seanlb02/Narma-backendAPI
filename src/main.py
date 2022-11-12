@@ -99,7 +99,7 @@ def create_app():
             User(
                 name='Peter Parker',
                 email='peter@hotmail.com',
-                password='password',
+                password=bcrypt.generate_password_hash('passwordzz').decode('utf-8'),
                 phonenumber='+61414346614',
                 gender='Male',
                 age='2000-10-6',
@@ -108,7 +108,7 @@ def create_app():
             User(
                 name='Debbie harry',
                 email='deb@hotmail.com',
-                password='password1',
+                password=bcrypt.generate_password_hash('password888').decode('utf-8'),
                 phonenumber='+61420956947',
                 gender='Non-binary',
                 age='1994-06-03',

@@ -63,10 +63,11 @@ def create_bot():
     db.session.add(bot)
     db.session.commit()
     #Respond to client request
-    return BotSchema().dump(bot), 201
+    return {"message" : "Bot created successfully"}
 
 #route to edit an existing bot in database [admin only]
 @bots_bp.route('/<string:name>/edit/', methods=['PATCH'])
+@jwt_required()
 def update_one_bot(name):
 
     #check to see if user is an admin:
@@ -83,7 +84,7 @@ def update_one_bot(name):
         bot.bio = data["bio"] or bot.bio
         bot.gender = data["gender"] or bot.gender
         bot.age = data["age"] or bot.age
-      
+        
         db.session.commit()
         return BotSchema().dump(bot)
     else:

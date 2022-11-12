@@ -89,20 +89,21 @@ def show_messages(name):
         return {"message": "no messages yet"}, 204
 
 
-# route for admins to DELETE messages from a defined bot
-@messages_bp.route('/<int:id>/delete/', methods=['DELETE'])
-@jwt_required()
-def delete_message(id):
+#this was decided not to be an effective use of message deletion, instead content deletion is preferred
+# # route for admins to DELETE messages from a defined bot
+# @messages_bp.route('/<int:id>/delete/', methods=['DELETE'])
+# @jwt_required()
+# def delete_message(id):
 
-    #check to see if user is an admin:
-    if not authorize():
-        return {'error': 'You must be an admin'}, 401
+#     #check to see if user is an admin:
+#     if not authorize():
+#         return {'error': 'You must be an admin'}, 401
 
-    stmt = db.select(Messages).filter_by(id=id)
-    result = db.session.scalar(stmt) 
-    if result:
-        db.session.delete(result)
-        db.session.commit()
-        return {'success': 'message has been deleted'}, 200
-    else:
-        return {'error': 'No message was found to delete'}, 204  
+#     stmt = db.select(Messages).filter_by(id=id)
+#     result = db.session.scalar(stmt) 
+#     if result:
+#         db.session.delete(result)
+#         db.session.commit()
+#         return {'success': 'message has been deleted'}, 200
+#     else:
+#         return {'error': 'No message was found to delete'}, 204  

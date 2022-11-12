@@ -32,7 +32,7 @@ def auth_register():
     db.session.add(user)
     db.session.commit()
     #respond to client request
-    return {"message": "User has been registered"}
+    return {"message": "Your account has been registered"}
 
 
 #route for registered user to login/ be authenticated with a token
