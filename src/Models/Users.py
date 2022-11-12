@@ -48,7 +48,7 @@ class UserSchema(ma.Schema):
     #3rd party phone number validator:
     @validates('phonenumber')
     def validate_phonenumber(self, phonenumber):
-        check = carrier._is_mobile(number_type(phonenumbers.parse(phonePATCHnumber)))
+        check = carrier._is_mobile(number_type(phonenumbers.parse(phonenumber)))
         if check is False:
             raise ValidationError("Phone number is not valid")
 

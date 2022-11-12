@@ -26,25 +26,27 @@ def like_message():
     stmt2 = db.select(Likes).filter_by(user_id=user).filter_by(message_id=message_id)
     liked = db.session.scalar(stmt2)
 
-    
-    if IntegrityError:
+    #if selection variable 'user_has_message' is returned as empty list (i.e. message doesnt belong to user), an AttributeError will be raised, so:
+    if AttributeError:
         return {"error" : "Specified message does not belong to logged in user"}
-
-    else: 
-        #user can only like a message once
+    if user_has_message.id == message_id:
         if not liked:
-                likes = Likes(
-                    user_id = user,
-                    message_id = message_id
-                    )
-                #add new like to the database
-                db.session.add(likes)
-                db.session.commit()
-                #return message to client
-                return {"message" : f"message {message_id} was liked by user {user}"}
+            likes = Likes(
+                user_id = user,
+                message_id = message_id
+                )
+            #add new like to the database
+            db.session.add(likes)
+            db.session.commit()
+            # if IntegrityError:
+            #         return {"error" : "Specified message does not belong to logged in user"}
+            #return message to client
+            return {"message" : f"message {message_id} was liked by user {user}"}
+                
         if liked:
             return {"message" : 'You are not allowed to like a message twice!'}
-    # except IntegrityError:
+    
+
         
         
 
