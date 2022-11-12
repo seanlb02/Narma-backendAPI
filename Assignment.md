@@ -152,7 +152,7 @@ def select_rows():
 
 ### Additional benefits
 
-Not only does amalgamating SQL methods with OOP methods (seen above) simplifies apps and developer workflows, but sending SQL commands to the db under the hood also (1) simplifies syntax for the developer team [i.e. implementing one language vs multiple] and (2) secures the system against SQL injection attacks. 
+Not only does amalgamating SQL methods with OOP methods (seen above) simplify apps and developer workflows, but sending SQL commands to the db under the hood also (1) simplifies syntax for the developer team [i.e. implementing one language vs multiple] and (2) secures the system against SQL injection attacks. 
 
 By allowing developers to encact SQL commands (e.g. SELECT, INSERT, UPDATE, DELETE) with the apps native language, project management is streamlined as potentially less blockers exist to devs with less experience with SQL. 
 
@@ -226,7 +226,7 @@ def auth_login():
 
 All users are authenticated with bearer tokens specifically, Json web tokens (JWT). The JWT manager from flask was used to generate tokens when a client json password matched the encrypted password stored in the database (see example above). This token is used to stake claims to resources behind secured enpoints. 
 
-<u>Phone number validator 'phonenumbers'</u>
+<u>Phone number validator: 'phonenumbers'</u>
 
 The <em>phonenumbers</em> package is the python port of Google's libphonenumber which uses a database of registered numbers from carriers all over the world. When used for validation (as seen in the example below) it not only checks for number syntax, but cross-references it with the built-in carrier database. Phonenumbers is an open source package and was used in the Narma API to detract and physically limit non-human (bot) user registeration. 
 
@@ -321,7 +321,7 @@ SQL Alchemy also requires this relationship to be recorded in both the Bot and U
 
 4. Messages model: 
 
-The messages model comprise individual entries (instances) inclusive of an ID, Content and a Connection ID foreign key that links the message to a connection. In other words each entry acts as 'message' and can be accesed/edited/deleted with the API either by its ID (sinlge message), Bot_id (all messages sent by a bot - admin only), all messages sent by a single bot to a logged in user, or user_id (which returns all messages sent to a particualar user from all the bots they follow). It shares a many-to-one relationship with the Connections Table, signalling that a message can only belong to one connection, yet each connection can have multiple messages associated with it. 
+The messages model comprise individual entries (instances) inclusive of an ID, Content and a Connection ID foreign key that links the message to a connection. In other words each entry acts as 'message' and can be accesed/edited/deleted with the API either by its ID (sinlge message), Bot_id (all messages sent by a bot - admin only), all messages sent by a single bot to a logged in user, or user_id (which returns all messages sent to a particualar user from all the bots they follow).The data returned to the client is refined by the schema which only sends  ('id', 'content' (explained below), 'bot: name, picture') - this was determined everything a front end message will requre and does not clutter the response. It shares a many-to-one relationship with the Connections Table, signalling that a message can only belong to one connection, yet each connection can have multiple messages associated with it. 
 
 5. Likes model: ID, Connection ID (FK), user_id (FK)
 

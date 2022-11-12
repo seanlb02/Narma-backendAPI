@@ -21,7 +21,7 @@ $ curl -L -O https://github.com/seanlb02/T2A2-backendAPI/archive/refs/heads/main
 ```
 Alternatively, you can download the zip directly from the github repository home page: https://github.com/seanlb02/T2A2-backendAPI
 
-Unzip and open the program directory in a IDE of your chosing, enter a virtual environment and install the program requirements with:
+Unzip and open the program directory in a IDE of your chosing, create and enter a virtual environment and install the program requirements with:
 
 ```bash
 $ pip install -r requirements.txt
@@ -41,6 +41,29 @@ DATABASE_URL=postgresql+psycopg2://postgres:<password>@127.0.0.1:5432/<database_
 ```
 
 When initialising a non-postgres database with the Narma API, it is advised to consult the documentation on how best to connect your database with the flask app.
+
+## launching the API server 
+
+Enter the src folder within the program directory in the terminal. Create required tables by running:
+
+```python
+$ flask create
+>>> Tables created
+```
+
+Then seed the tables with some seed data:
+
+```python
+$ flask seed
+>>> Table seeded
+```
+
+The API should be now ready to start. Launch the flask application in development mode on Port 8000 by running:
+
+```python
+$ flask run 
+>>> flask run
+```
 
 ## Endpoint documentation
 ---
