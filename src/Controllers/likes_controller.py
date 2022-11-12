@@ -1,5 +1,6 @@
 
 from os import name
+from sqlite3 import IntegrityError
 from flask import Blueprint, request
 from db import db, ma
 from Models.Connections import Connections, ConnectionsSchema
@@ -20,23 +21,32 @@ def like_message():
     message_id = request.json.get("message_id")
     user = get_jwt_identity()
 
-    stmt = db.select(Likes).filter_by(user_id=user).filter_by(message_id=message_id)
-    liked = db.session.scalar(stmt)
+    stmt1 = db.select(Messages).filter(Messages.connection.has(user_id = user))
+    user_has_message = db.session.scalars(stmt1)
+    stmt2 = db.select(Likes).filter_by(user_id=user).filter_by(message_id=message_id)
+    liked = db.session.scalar(stmt2)
 
-    #user can only like a message once
-    if not liked:
-        likes = Likes(
-            user_id = user,
-            message_id = message_id
-            )
-        #add new like to the database
-        db.session.add(likes)
-        db.session.commit()
-        #return message to client
-        return {"message" : f"message {message_id} was liked by user {user}"}
     
-    if liked:
-        return {"message" : 'You are not allowed to like a message twice!'}
+    if IntegrityError:
+        return {"error" : "Specified message does not belong to logged in user"}
+
+    else: 
+        #user can only like a message once
+        if not liked:
+                likes = Likes(
+                    user_id = user,
+                    message_id = message_id
+                    )
+                #add new like to the database
+                db.session.add(likes)
+                db.session.commit()
+                #return message to client
+                return {"message" : f"message {message_id} was liked by user {user}"}
+        if liked:
+            return {"message" : 'You are not allowed to like a message twice!'}
+    # except IntegrityError:
+        
+        
 
 #route for user to unlike a message
 

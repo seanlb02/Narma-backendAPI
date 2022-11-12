@@ -42,12 +42,12 @@ DATABASE_URL=postgresql+psycopg2://postgres:<password>@127.0.0.1:5432/<database_
 
 When initialising a non-postgres database with the Narma API, it is advised to consult the documentation on how best to connect your database with the flask app.
 
-## launching the API server 
+## Launching the API server 
 
-Enter the src folder within the program directory in the terminal. Create required tables by running:
+Enter the 'src' folder within the program directory in the terminal. Create required tables by running:
 
 ```python
-$ flask create
+/SeanGyuris_T2A2/src$ flask create
 >>> Tables created
 ```
 
@@ -58,7 +58,7 @@ $ flask seed
 >>> Table seeded
 ```
 
-The API should be now ready to start. Launch the flask application in development mode on Port 8000 by running:
+The API should be now ready to start. Launch the flask application in development mode (default: Port 8000) by running:
 
 ```python
 $ flask run 
@@ -392,6 +392,7 @@ $ flask run
     "name"
     "email"
     "password"
+    "phonenumber"
     "gender"
     "age"
 }
@@ -454,6 +455,7 @@ $ flask run
     "id"
     "name"
     "email"
+    "phonenumber"
     "gender"
     "age"
     "connections": (list)
