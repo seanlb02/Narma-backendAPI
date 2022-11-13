@@ -16,7 +16,7 @@ Content within these messages is general in nature, but is intended to support p
 Program files can be downloaded with the following curl command:
 
 ```bash
-$ curl -L -O https://github.com/seanlb02/T2A2-backendAPI/archive/refs/heads/main.zip
+curl -L -O https://github.com/seanlb02/T2A2-backendAPI/archive/refs/heads/main.zip
 
 ```
 Alternatively, you can download the zip directly from the github repository home page: https://github.com/seanlb02/T2A2-backendAPI
@@ -24,12 +24,12 @@ Alternatively, you can download the zip directly from the github repository home
 Unzip and open the program directory in a IDE of your chosing, create and enter a virtual environment and install the program requirements with:
 
 ```bash
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-Proceed to create and initialise a realtaional database with (postgres prefered) on port 5432 of your local machine. 
+Proceed to create and initialise a realtaional database (postgres prefered) on port 5432 of your local machine. 
 
-Since the project is still in developement, the API ORM adaptor comes with the database name and password that was initially used when the API was built. For quick start, set up a database called narma_app with the password of medic2. 
+Since the project is still in developement, the API ORM adaptor includes the database name and password that was initially used when the API was built. For quick start, set up a database called 'narma_app' with the password of 'medic2'. 
 
 To create a custom db, ensure you modify the database adaptor string within the program's .env file with your chosen database name and password:
 
@@ -44,14 +44,14 @@ When initialising a non-postgres database with the Narma API, it is advised to c
 
 ## Launching the API server 
 
-Enter the 'src' folder within the program directory in the terminal. Create required tables by running:
+Enter the 'src' folder within the program directory in the terminal. Create all required tables by running:
 
 ```python
 /SeanGyuris_T2A2/src$ flask create
 >>> Tables created
 ```
 
-Then seed the tables with some seed data:
+Then seed the tables with the apps default seed data:
 
 ```python
 $ flask seed
