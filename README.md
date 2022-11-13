@@ -47,7 +47,7 @@ When initialising a non-postgres database with the Narma API, it is advised to c
 Enter the 'src' folder within the program directory in the terminal. Create all required tables by running:
 
 ```python
-/SeanGyuris_T2A2/src$ flask create
+/T2A2-backendAPI-main/src$ flask create
 >>> Tables created
 ```
 
